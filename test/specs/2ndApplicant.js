@@ -4,9 +4,8 @@ var assert = require('assert');
 describe('i&mbank Needs Analysis screen, ', function() {
   browser.timeouts('scripts', 15000);
 it('should be available via browser', function () {
-  //browser.url('http://localhost:3000/needs-analysis');
   //Copy link address to the 2nd Applicant Inivite
-  browser.url('http://customer-onboarding-onboarding-uat.apps.staging.devops.inm.corp/basic?appid=7463ff6f-836e-49cc-9d14-30591c4851af&inviteid=2796');
+  browser.url('http://customer-onboarding-onboarding-uat.apps&inviteid=2796');
 });
 });
 describe('Accept Invitation',function(){
