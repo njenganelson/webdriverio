@@ -1,0 +1,17 @@
+{
+  "name": "package",
+  "version": "1.0.0",
+  "description": "E2E tests for TZ SFE",
+  "main": "index.js",
+  "scripts": {
+    "test": "cypress open"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node": "^13.6.0"
+  },
+  "devDependencies": {
+    "cypress": "^3.8.3"
+  }
+}

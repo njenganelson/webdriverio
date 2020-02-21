@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  name: zap-end-to-end-tests
+spec:
+  triggers:
+    - type: "imageChange"
+      imageChange:
+        from:
+          kind: "ImageStreamTag"
+          name: "frontend:latest"
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfile: |-
+        pipeline {
+          agent { label 'owasp-zap-openshift' }
+          stages {
+            stage ('Checkout Source') {
+              steps {
+                git branch: 'master', credentialsId: 'cicd-quautomationssh', url: 'git@github.com:inmdigitalfactory/QaAutomation'
+              } 
+            }
+
+            stage('Install Dependencies') {
+              steps {
+                nodejs(nodeJSInstallationName: '8.11.3') {
+                  sh 'npm install'
+                }
+              }
+            }
+
+            stage('Prepare Test Images') {
+              steps {
+                sh 'mkdir -p /tmp/tests/images'
+                sh 'cp test-images/id-back.jpg /tmp/tests/images/id-back.jpg'
+                sh 'cp test-images/id-front.jpg /tmp/tests/images/id-front.jpg'
+                sh 'cp test-images/passport.jpg /tmp/tests/images/passport.jpg'
+                sh 'cp test-images/signature.png /tmp/tests/images/signature.png'
+              }
+            }
+
+            stage('UI Tests') {
+              steps {
+                sh 'rm -rfv /tmp/zap/'
+                sh 'mkdir -p zap-files'
+                sh '/zap/zap.sh -host 0.0.0.0 -port $ZAP_PORT -config api.addrs.addr.name=".*" -config api.addrs.addr.regex=true -daemon -newsession /tmp/zap/session -config api.disablekey=true &>./zap-files/zap-run.log &'
+                nodejs(nodeJSInstallationName: '8.11.3') {
+                  sh 'npm test'
+                }
+              }
+              post {
+                always {
+                  nodejs(nodeJSInstallationName: '8.11.3') {
+                    sh 'npm run greport'
+                  }
+                  junit 'reports/junit/*.xml'
+                  archiveArtifacts artifacts: 'reports/html/**/*.*', fingerprint: true, allowEmptyArchive: true
+                  // publish html
+                  publishHTML target: [
+                      allowMissing: false,
+                      alwaysLinkToLastBuild: false,
+                      keepAll: true,
+                      reportDir: 'reports/html',
+                      reportFiles: 'index.html',
+                      reportName: 'UI Tests Report'
+                    ]
+                }
+              }
+            }
+          }
+          
+          post {
+            always {
+              sh 'curl "http://zap/JSON/core/action/shutdown" --proxy "http://localhost:$ZAP_PORT"'
+              sh '/zap/zap.sh -last_scan_report $(pwd)/zap-files/report.html -session /tmp/zap/session -cmd'
+              archiveArtifacts artifacts: 'zap-files/**/*.*', fingerprint: true, allowEmptyArchive: true
+            }
+          }
+        }

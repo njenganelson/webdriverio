@@ -1,0 +1,17 @@
+var assert = require('assert');
+
+describe('WebPay - Online Payments page', function() {
+  browser.timeouts('scripts', 5000);
+it('should be available via browser', function () {
+  browser.url('http://imbank-im-website-uat.apps.staging.devops.inm.corp/diaspora/remittances/online-payments');
+
+})
+describe('User is navited to the Online payments Page',function(){
+    var pageText = $('#webpay__banner__title title');
+    var text = browser.getText('#webpay__banner__title title');
+    assert.equal(text,'Online Payments');
+})
+})
+describe('Enter Personal Details',function(){
+  
+})

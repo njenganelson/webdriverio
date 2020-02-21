@@ -1,0 +1,28 @@
+{
+  "name": "webdriverio-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "scripts": {
+    "run-server": "selenium &",
+    "test": "node run.js",
+    "greport": "allure generate reports/allure -o reports/html"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "allure-commandline": "^2.7.0",
+    "chromedriver": "^2.40.0",
+    "geckodriver": "^1.11.0",
+    "wdio-allure-reporter": "^0.6.3",
+    "wdio-junit-reporter": "^0.4.4",
+    "wdio-mocha-framework": "^0.5.13",
+    "wdio-spec-reporter": "^0.1.4",
+    "webdriverio": "^4.12.0"
+  }
+}

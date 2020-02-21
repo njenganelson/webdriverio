@@ -1,0 +1,12 @@
+var assert = require('assert');
+describe('IMbank SFE TZ, ', function() {
+  browser.timeouts('scripts', 15000);
+    it('should be available via browser', function () {
+        browser.url('http://dev.icube.ga/dashboard/calls');
+    })
+    it('Login',function(){
+        browser.setValue('.is-invalid.form-control','user4')
+        browser.setValue('{name="password"}','admin4')
+        browser.click('#login-button')
+    })
+});

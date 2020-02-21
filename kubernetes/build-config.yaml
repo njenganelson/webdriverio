@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  name: end-to-end-tests
+spec:
+  source:
+    git:
+      uri: "https://github.com/inmdigitalfactory/QaAutomation"
+    sourceSecret:
+      name: "quautomationssh"
+    type: "Git"
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfile: |-
+        pipeline {
+          agent {
+            kubernetes {
+              cloud 'openshift'
+              label 'nodejs'
+              containerTemplate {
+                name 'jnlp'
+                image 'node:8'
+                ttyEnabled true
+                command 'cat'
+              }
+            }
+          }
+
+          stages {
+            stage ('Checkout Source') {
+              steps {
+                git branch: 'master', credentialsId: 'cicd-quautomationssh', url: 'git@github.com:inmdigitalfactory/QaAutomation'
+              } 
+            }
+
+            stage('Install Dependencies') {
+              steps {
+                sh 'curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash'
+                nodejs(nodeJSInstallationName: '8.11.3') {
+                  sh 'npm install'
+                }
+              }
+            }
+
+            stage('Prepare Test Images') {
+              steps {
+                sh 'mkdir -p /tmp/tests/images'
+                sh 'cp test-images/id-back.jpg /tmp/tests/images/id-back.jpg'
+                sh 'cp test-images/id-front.jpg /tmp/tests/images/id-front.jpg'
+                sh 'cp test-images/passport.jpg /tmp/tests/images/passport.jpg'
+                sh 'cp test-images/signature.png /tmp/tests/images/signature.png'
+              }
+            }
+
+            stage('UI Tests') {
+              steps {
+                nodejs(nodeJSInstallationName: '8.11.3') {
+                  sh 'npm test'
+                }
+              }
+            }
+          }
+          post {
+            always {
+              nodejs(nodeJSInstallationName: '8.11.3') {
+                sh 'npm run greport'
+              }
+              junit 'reports/junit/*.xml'
+              archiveArtifacts artifacts: 'reports/html/**/*.*', fingerprint: true
+            }
+          } 
+        }
+
