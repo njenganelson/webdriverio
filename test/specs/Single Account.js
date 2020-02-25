@@ -5,7 +5,6 @@ describe('i&mbank Needs Analysis screen, ', function() {
   it('Open browser',function(){
     browser.url('http://customer-onboarding-onboarding-uat.apps');
     browser.maximizeWindow();
-    //browser.url('http://10.5.51.245:3000/needs-analysis');
   })
     
   it('Verify the description on the landing page',function() {
