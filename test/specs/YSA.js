@@ -4,7 +4,7 @@ describe('i&mbank Needs Analysis screen, ', function() {
   browser.timeouts('scripts', 15000);
 it('should be available via browser', function () {
   //browser.url('http://localhost:3000/needs-analysis');
-  browser.url('http://customer-onboarding-onboarding-uat.apps.staging.devops.inm.corp/needs-analysis');
+  browser.url('http://customer-onboarding-onboarding-uat');
 
 });
 it('Verify the description on the landing page',function() {

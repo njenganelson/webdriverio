@@ -3,34 +3,33 @@ var assert = require('assert');
 describe('i&mbank Needs Analysis screen, ', function() {
   browser.timeouts('scripts', 15000);
   it('Open browser',function(){
-    browser.url('http://customer-onboarding-onboarding-uat.apps.staging.devops.inm.corp/');
+    browser.url('http://customer-onboarding-onboarding-uat.apps');
     browser.maximizeWindow();
     //browser.url('http://10.5.51.245:3000/needs-analysis');
-    //browser.url('http://customer-cao-onboarding-onboarding-uat.apps.staging.devops.inm.corp/needs-analysis');
-  });
- 
+  })
+    
   it('Verify the description on the landing page',function() {
     browser.waitForExist('.title');
     var need_title = $('.title');
     var text = browser.getText('.title');
     assert.equal(text,'THE EASIEST WAY\nTO START BANKING WITH I&M');
 
-});
-it('Verify the Information on the Need Analysis Landing page', function() {
-  browser.waitForExist('.description')
-  var need_description = $('.description');
-  var text = browser.getText('.description');
-  console.log(text);
+  });
+  it('Verify the Information on the Need Analysis Landing page', function() {
+   browser.waitForExist('.description')
+    var need_description = $('.description');
+    var text = browser.getText('.description');
+    console.log(text);
 
-});
+  });
 /*it('Verify user is able to see all products', function() {
   browser.click('#inm__show-accounts');
 
 
 });*/
-it('Click on Individual accounts',function(){
-  browser.click('.option-title');
-});
+  it('Click on Individual accounts',function(){
+    browser.click('.option-title');
+  });
 describe('Confirm Whether Customer is existing or New',function(){
   it('Customer is New',function(){
     browser.waitForExist('.existing-customer__title')

@@ -3,7 +3,7 @@ var assert = require('assert');
 describe('i&mbank Needs Analysis screen, ', function() {
   browser.timeouts('scripts', 5000);
 it('should be available via browser', function () {
-  browser.url('http://customer-onboarding-onboarding-uat.apps.staging.devops.inm.corp/');
+  browser.url('http://customer-onboarding-onboarding-uat.apps');
   //browser.url('http://customer-cao-onboarding-onboarding-uat.apps.staging.devops.inm.corp/needs-analysis');
 
 });
